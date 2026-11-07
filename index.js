@@ -19,13 +19,18 @@ orbit.enableDamping = true;
 orbit.dampingFactor = 0.03;
 
 
-const geo = new THREE.IcosahedronGeometry(1, 2);
+const earthgrp = new THREE.Group();
+earthgrp.rotation.z= -23.4 * Math.PI/180;
+scene.add(earthgrp);
+
+new OrbitControls(camera, renderer.domElement);
+const loader = new THREE.TextureLoader();
+const geo = new THREE.IcosahedronGeometry(1, 12);
 const material = new THREE.MeshStandardMaterial({
-    color: "red",
-    flatShading: true
+    map: loader.load("../textures/earth-daymap-4k.jpg"),
 });
-const mesh = new THREE.Mesh(geo, material);
-scene.add(mesh);
+const earthMesh = new THREE.Mesh(geo, material);
+earthgrp.add(earthMesh);
 
 
 const hemilight = new THREE.HemisphereLight("white", "black");
@@ -34,7 +39,7 @@ scene.add(hemilight);
 
 function animate(t=0) {
     requestAnimationFrame(animate);
-    mesh.rotation.y = t * 0.0001;
+    earthMesh.rotation.y = t * 0.0001;
     renderer.render(scene, camera);
     orbit.update();
 }
