@@ -1,6 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "jsm/controls/OrbitControls.js";
 import { getFresnelMat } from "./src/getFresnelMat.js";
+import { EffectComposer } from "jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "jsm/postprocessing/UnrealBloomPass.js";
 
 const w = window.innerWidth;
 const h = window.innerHeight;
@@ -17,6 +20,14 @@ const camera = new THREE.PerspectiveCamera( Fov , aspect , near , far);
 camera.position.z = 2;
 const scene = new THREE.Scene();
 
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloomPass = new UnrealBloomPass(
+    new THREE.Vector2(w,h), 0.5, 0.2, 0.95);
+composer.addPass(bloomPass);
+
+
 const orbit = new OrbitControls(camera, renderer.domElement);
 orbit.enableDamping = true;
 orbit.dampingFactor = 0.03;
@@ -28,6 +39,8 @@ scene.add(earthgrp);
 
 const loader = new THREE.TextureLoader();
 
+const specular = loader.load("./textures/earth-specular-4k.jpg");
+const bump = loader.load("./textures/earth-bump-4k.jpg");
 const color =loader.load("./textures/earth-daymap-4k.jpg");
 const lights = loader.load("./textures/earth-nightmap-4k.jpg");
 const clouds = loader.load("./textures/earth-clouds-4k.jpg");
@@ -37,9 +50,13 @@ const sun = new THREE.DirectionalLight("white", 2);
 sun.position.set(-2, 0.5, 1.5);
 scene.add(sun);
 
-const geo = new THREE.IcosahedronGeometry(1, 16);
+const geo = new THREE.IcosahedronGeometry(1, 12);
 const earthMat = new THREE.MeshStandardMaterial({
-    map: color
+    map: color,
+    bumpMap: bump,
+    bumpScale: 1,
+    roughnessMap: specular,
+    roughness: 1,
 });
 const earthMesh = new THREE.Mesh(geo, earthMat);
 earthgrp.add(earthMesh);
