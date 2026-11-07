@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "jsm/controls/OrbitControls.js";
-//import { getEarthMat } from "./src/getEarthMat.js";
+import { getFresnelMat } from "./src/getFresnelMat.js";
 
 const w = window.innerWidth;
 const h = window.innerHeight;
@@ -37,7 +37,7 @@ const sun = new THREE.DirectionalLight("white", 2);
 sun.position.set(-2, 0.5, 1.5);
 scene.add(sun);
 
-const geo = new THREE.IcosahedronGeometry(1, 12);
+const geo = new THREE.IcosahedronGeometry(1, 16);
 const earthMat = new THREE.MeshStandardMaterial({
     map: color
 });
@@ -89,8 +89,13 @@ const cloudsMat = new THREE.MeshStandardMaterial({
     map: clouds,
     blending: THREE.AdditiveBlending,
     transparent: true,
-    opacity: 0.5
+    opacity: 0.6
 });
+
+const fresnelMat = getFresnelMat();
+const glowMesh = new THREE.Mesh(geo, fresnelMat);
+glowMesh.scale.setScalar(1.005);
+earthgrp.add(glowMesh);
 
 const cloudsMesh = new THREE.Mesh(geo, cloudsMat);
 cloudsMesh.scale.setScalar(1.01);
