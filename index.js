@@ -32,6 +32,7 @@ const color =loader.load("./textures/earth-daymap-4k.jpg");
 const lights = loader.load("./textures/earth-nightmap-4k.jpg");
 const clouds = loader.load("./textures/earth-clouds-4k.jpg");
 
+const sunDirection = new THREE.Vector3(-2, 0.5, 1.5).normalize();
 const sun = new THREE.DirectionalLight("white", 2);
 sun.position.set(-2, 0.5, 1.5);
 scene.add(sun);
@@ -43,15 +44,46 @@ const earthMat = new THREE.MeshStandardMaterial({
 const earthMesh = new THREE.Mesh(geo, earthMat);
 earthgrp.add(earthMesh);
 
-const lightsMat = new THREE.MeshBasicMaterial({
-    map: lights,
-    blending: THREE.AdditiveBlending,
+const vertexShader = `
+    varying vec2 vUv;
+    varying vec3 vNormal;
+
+    void main() {
+        vUv = uv;
+        vNormal = normalize(mat3(modelMatrix) * normal);
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+`;
+const fragmentShader = `
+    uniform sampler2D lightsTexture;
+    uniform vec3 sunDirection;
+    
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    void main(){
+        float sunlight = dot(normalize(vNormal), normalize(sunDirection));
+            float night = 1.0 -smoothstep(-0.3, 0.3,sunlight);
+            vec3 lights = texture2D(lightsTexture, vUv).rgb;
+            gl_FragColor = vec4(lights, night);
+    }
+`;
+
+const lightsMat = new THREE.ShaderMaterial({
+    uniforms: {
+        lightsTexture: { value: lights},
+        sunDirection: { value: sunDirection }
+    },
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
     transparent: true,
-    opacity: 0.5,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
 });
 
 const lightsMesh = new THREE.Mesh(geo, lightsMat);
 earthgrp.add(lightsMesh);
+lightsMesh.scale.setScalar(1.0001);
 
 const cloudsMat = new THREE.MeshStandardMaterial({
     map: clouds,
