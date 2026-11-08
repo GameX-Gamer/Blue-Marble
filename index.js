@@ -1,9 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "jsm/controls/OrbitControls.js";
 import { getFresnelMat } from "./src/getFresnelMat.js";
-import { EffectComposer } from "jsm/postprocessing/EffectComposer.js";
-import { RenderPass } from "jsm/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "jsm/postprocessing/UnrealBloomPass.js";
+import { RGBELoader } from 'jsm/loaders/RGBELoader.js';
 
 const w = window.innerWidth;
 const h = window.innerHeight;
@@ -11,6 +9,12 @@ const h = window.innerHeight;
 const renderer = new THREE.WebGLRenderer({ antialias: true});
 renderer.setSize(w, h);
 document.body.appendChild(renderer.domElement);
+
+window.addEventListener("resize", () => {
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix;
+    renderer.setSize(w,h);
+});
 
 const Fov = 75;
 const aspect = w/h;
@@ -20,12 +24,12 @@ const camera = new THREE.PerspectiveCamera( Fov , aspect , near , far);
 camera.position.z = 2;
 const scene = new THREE.Scene();
 
-
-const composer = new EffectComposer(renderer);
-composer.addPass(new RenderPass(scene, camera));
-const bloomPass = new UnrealBloomPass(
-    new THREE.Vector2(w,h), 0.5, 0.2, 0.95);
-composer.addPass(bloomPass);
+const rgbeLoader = new RGBELoader();
+rgbeLoader.load("./HDRI/output_4k.hdr", function (texture){
+   texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = texture; 
+    scene.background = texture;
+});
 
 
 const orbit = new OrbitControls(camera, renderer.domElement);
