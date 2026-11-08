@@ -35,7 +35,13 @@ rgbeLoader.load("./HDRI/output_4k.hdr", function (texture){
 const orbit = new OrbitControls(camera, renderer.domElement);
 orbit.enableDamping = true;
 orbit.dampingFactor = 0.03;
-
+const resetbutton = document.querySelector("#reset-btn");
+resetbutton.addEventListener("click", () => {
+    orbit.reset();
+});
+const startPosition = camera.position.clone();
+const startTarget = orbit.target.clone();
+camera.position.lerp(startPosition, 0.5);
 
 const earthgrp = new THREE.Group();
 earthgrp.rotation.z= -23.4 * Math.PI/180;

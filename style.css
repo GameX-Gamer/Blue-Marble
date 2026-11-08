@@ -43,6 +43,66 @@ canvas {
     font-size: 20vh;
 }
 
+.top-left-txt{
+    position: absolute;
+    top: 7%;
+    left: 7%;
+    transform: translateY(-50%);
+    color: rgb(255, 255, 255);
+    z-index: 10;
+}
+.top-left-txt h4{
+    font-family:"outfit";
+    font-weight:100;
+}
+.top-right-txt{
+    display: flex;
+    position: absolute;
+    gap: 3vw;
+    top: 7%;
+    right: 7%;
+    transform: translateY(-50%);
+    color: rgb(255, 255, 255);
+    z-index: 10;
+}
+.top-right-txt h4{
+    padding: 5px 10px;
+    font-family:"outfit";
+    font-weight:100;
+}
+.top-right-txt button{
+    padding: 5px 10px;
+    font-family:"outfit";
+    font-weight:100;
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.top-right-txt button:hover {
+    background: white;
+    color: black;
+    border-radius: 250px;
+    font-weight: 200;
+}
+
+
+.interactive{
+    position: absolute;
+    top: 31%;
+    left: 7%;
+    transform: translateY(-50%);
+    color: rgb(173, 152, 255);
+    z-index: 10;
+}
+.interactive h3 {
+    font-family: "outfit";
+    font-weight: 200;
+    top: 35vh;
+}
+
 .info {
 
     position: absolute;
@@ -52,7 +112,6 @@ canvas {
     color: white;
     z-index: 10;
 }
-
 .info h1 {
 
     letter-spacing: -0.8rem;
@@ -67,20 +126,6 @@ canvas {
     position: absolute;
     font-family: "outfit";
     font-weight: 100;
-    left: -0.2vw;
-    top: 35vh;
-}
-.interactive{
-    position: absolute;
-    top: 31%;
-    left: 7%;
-    transform: translateY(-50%);
-    color: rgb(173, 152, 255);
-    z-index: 10;
-}
-.interactive h3 {
-    font-family: "outfit", sans-serif;
-    font-weight: 200;
     left: -0.2vw;
     top: 35vh;
 }
