@@ -2,18 +2,85 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: gilroy;
+    font-family: poppins;
 }
 html,
 body {
     height: 100%;
     width: 100%;
 }
-.info {
+
+@font-face{
+    font-family: "outfit";
+    src: url("./fonts/Outfit/Outfit-VariableFont_wght.ttf")
+}
+@font-face{
+    font-family: "bebas";
+    src: url("./fonts/Bebas_Neue/BebasNeue-Regular.ttf")
+}
+@font-face {
+    font-family: "stack-sans";
+    src: url("./fonts/Stack_Sans_Headline/StackSansHeadline-VariableFont_wght.ttf")
+}
+@font-face {
+    font-family: "archivo";
+    src: url(./fonts/Archivo/Archivo-VariableFont_wdth\,wght.ttf);
+}
+canvas {
+    position: absolute;
+    z-index: 2;
+}
+.hero{
     position: absolute;
     top: 50%;
-    left: 8%;
+    left: 50%;
+    transform: translateY(-50%);
+    transform: translateX(-50%);
+    color: black;
+    z-index: 1;
+}
+.hero{
+    font-size: 20vh;
+}
+
+.info {
+
+    position: absolute;
+    top: 50%;
+    left: 7%;
     transform: translateY(-50%);
     color: white;
-    font-family: Arial, sans-serif;
+    z-index: 10;
+}
+
+.info h1 {
+
+    letter-spacing: -0.8rem;
+    line-height: 0.75em;
+    font-family: "archivo";
+    font-size: 20vh;
+    font-weight: 600;
+    transform: scaleX(0.85);
+    transform-origin: left center;
+}
+.info p {
+    position: absolute;
+    font-family: "outfit";
+    font-weight: 100;
+    left: -0.2vw;
+    top: 35vh;
+}
+.interactive{
+    position: absolute;
+    top: 31%;
+    left: 7%;
+    transform: translateY(-50%);
+    color: rgb(173, 152, 255);
+    z-index: 10;
+}
+.interactive h3 {
+    font-family: "outfit", sans-serif;
+    font-weight: 200;
+    left: -0.2vw;
+    top: 35vh;
 }
