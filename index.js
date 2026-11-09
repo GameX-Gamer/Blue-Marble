@@ -39,9 +39,6 @@ const resetbutton = document.querySelector("#reset-btn");
 resetbutton.addEventListener("click", () => {
     orbit.reset();
 });
-const startPosition = camera.position.clone();
-const startTarget = orbit.target.clone();
-camera.position.lerp(startPosition, 0.5);
 
 const earthgrp = new THREE.Group();
 earthgrp.rotation.z= -23.4 * Math.PI/180;
@@ -64,7 +61,7 @@ const geo = new THREE.IcosahedronGeometry(1, 12);
 const earthMat = new THREE.MeshStandardMaterial({
     map: color,
     bumpMap: bump,
-    bumpScale: 1,
+    bumpScale: 1.2,
     roughnessMap: specular,
     roughness: 1,
 });
