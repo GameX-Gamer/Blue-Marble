@@ -73,7 +73,9 @@ earthgrp.add(earthMesh);
 
 const viewButton = document.querySelector("#view-btn");
 let trackedPoint = null;
+let trackedCamera = null;
 let isTracking = false;
+
 
 const vertexShader = `
     varying vec2 vUv;
@@ -135,19 +137,30 @@ earthgrp.add(cloudsMesh);
 viewButton.addEventListener("click", () => {
     if (isTracking){
         trackedPoint = null;
+        trackedCamera = null;
         isTracking = false;
         viewButton.textContent = "MY VIEW";
         return;
     }
+
     raycaster.setFromCamera(pointer, camera);
     const hits = raycaster.intersectObject(earthMesh);
+
     if (hits.length > 0) {
         trackedPoint = earthMesh.worldToLocal(hits[0].point.clone());
+        trackedCamera = earthMesh.worldToLocal(camera.position.clone());
         isTracking = true;
         viewButton.textContent = "UNLOCK VIEW";
     }
 });
+resetbutton.addEventListener("click", () => {
+    isTracking = false;
+    trackedPoint = null;
+    trackedCamera = null;
 
+    viewButton.textContent = "MY VIEW";
+    orbit.reset();
+});
 
 color.colorSpace = THREE.SRGBColorSpace;
 lights.colorSpace = THREE.SRGBColorSpace;
@@ -157,8 +170,12 @@ function animate(t=0) {
     earthMesh.rotation.y = t * 0.0001;
     lightsMesh.rotation.y = t * 0.0001;
     cloudsMesh.rotation.y = t * 0.00013;
-    if (isTracking && trackedPoint){
+    if (isTracking && trackedPoint && trackedCamera){
         const worldPoint = earthMesh.localToWorld(trackedPoint.clone());
+        const worldcamera = earthMesh.localToWorld(
+            trackedCamera.clone()
+        );
+        camera.position.copy(worldcamera);
         orbit.target.copy(worldPoint);
     }
     orbit.update();
