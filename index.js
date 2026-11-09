@@ -11,9 +11,9 @@ renderer.setSize(w, h);
 document.body.appendChild(renderer.domElement);
 
 window.addEventListener("resize", () => {
-    camera.aspect = w/h;
-    camera.updateProjectionMatrix;
-    renderer.setSize(w,h);
+    camera.aspect = window.innerWidth/window.innerHeight;
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    camera.updateProjectionMatrix();
 });
 const Fov = 75;
 const aspect = w/h;
@@ -169,7 +169,8 @@ function animate(t=0) {
     requestAnimationFrame(animate);
     earthMesh.rotation.y = t * 0.0001;
     lightsMesh.rotation.y = t * 0.0001;
-    cloudsMesh.rotation.y = t * 0.00013;
+    cloudsMesh.rotation.y = t * 0.00012;
+
     if (isTracking && trackedPoint && trackedCamera){
         const worldPoint = earthMesh.localToWorld(trackedPoint.clone());
         const worldcamera = earthMesh.localToWorld(
@@ -178,6 +179,7 @@ function animate(t=0) {
         camera.position.copy(worldcamera);
         orbit.target.copy(worldPoint);
     }
+
     orbit.update();
     renderer.render(scene, camera);
     
