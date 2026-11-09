@@ -15,7 +15,6 @@ window.addEventListener("resize", () => {
     camera.updateProjectionMatrix;
     renderer.setSize(w,h);
 });
-
 const Fov = 75;
 const aspect = w/h;
 const near = 0.1;
@@ -23,6 +22,10 @@ const far = 10;
 const camera = new THREE.PerspectiveCamera( Fov , aspect , near , far);
 camera.position.z = 2;
 const scene = new THREE.Scene();
+
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2(0, 0);
+
 
 const rgbeLoader = new RGBELoader();
 rgbeLoader.load("./HDRI/output_4k.hdr", function (texture){
@@ -67,6 +70,10 @@ const earthMat = new THREE.MeshStandardMaterial({
 });
 const earthMesh = new THREE.Mesh(geo, earthMat);
 earthgrp.add(earthMesh);
+
+const viewButton = document.querySelector("#view-btn");
+let trackedPoint = null;
+let isTracking = false;
 
 const vertexShader = `
     varying vec2 vUv;
@@ -125,6 +132,23 @@ const cloudsMesh = new THREE.Mesh(geo, cloudsMat);
 cloudsMesh.scale.setScalar(1.01);
 earthgrp.add(cloudsMesh);
 
+viewButton.addEventListener("click", () => {
+    if (isTracking){
+        trackedPoint = null;
+        isTracking = false;
+        viewButton.textContent = "MY VIEW";
+        return;
+    }
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObject(earthMesh);
+    if (hits.length > 0) {
+        trackedPoint = earthMesh.worldToLocal(hits[0].point.clone());
+        isTracking = true;
+        viewButton.textContent = "UNLOCK VIEW";
+    }
+});
+
+
 color.colorSpace = THREE.SRGBColorSpace;
 lights.colorSpace = THREE.SRGBColorSpace;
 
@@ -133,7 +157,12 @@ function animate(t=0) {
     earthMesh.rotation.y = t * 0.0001;
     lightsMesh.rotation.y = t * 0.0001;
     cloudsMesh.rotation.y = t * 0.00013;
-    renderer.render(scene, camera);
+    if (isTracking && trackedPoint){
+        const worldPoint = earthMesh.localToWorld(trackedPoint.clone());
+        orbit.target.copy(worldPoint);
+    }
     orbit.update();
+    renderer.render(scene, camera);
+    
 }
 animate();
