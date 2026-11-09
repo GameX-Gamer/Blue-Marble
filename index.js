@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "jsm/controls/OrbitControls.js";
 import { getFresnelMat } from "./src/getFresnelMat.js";
-import { RGBELoader } from 'jsm/loaders/RGBELoader.js';
+import { EXRLoader } from 'jsm/loaders/EXRLoader.js';
 
 const w = window.innerWidth;
 const h = window.innerHeight;
@@ -27,8 +27,8 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2(0, 0);
 
 
-const rgbeLoader = new RGBELoader();
-rgbeLoader.load("./HDRI/output_4k.hdr", function (texture){
+const exrLoader = new EXRLoader();
+exrLoader.load("./HDRI/output_4k-loss.exr", function (texture){
    texture.mapping = THREE.EquirectangularReflectionMapping;
     scene.environment = texture; 
     scene.background = texture;
